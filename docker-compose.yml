@@ -1,0 +1,80 @@
+services:
+  app:
+    container_name: svelte
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - backend
+    networks:
+      - frontend
+      - grpc
+
+  surrealdb:
+    container_name: surrealdb
+    image: surrealdb/surrealdb:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./surrealdb-data:/data/db
+    command: >
+      start --log info --bind 0.0.0.0:8000 --user root --pass root rocksdb:///data/db
+    restart: always
+    networks:
+      - backend
+
+  redis:
+    container_name: redis_for_bacon
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    command: ["redis-server", "--save", "900", "1", "--loglevel", "warning"]
+    networks:
+      - backend
+
+  backend:
+    container_name: rust_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      - DB_URL=ws://surrealdb:8000
+      - REDIS_URL=redis://redis_for_bacon:6379
+    depends_on:
+      - surrealdb
+    networks:
+      - grpc
+      - backend
+    command: ["cargo", "run", "--release"]
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+      - backend
+    networks:
+      - frontend
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+  grpc:
+    driver: bridge

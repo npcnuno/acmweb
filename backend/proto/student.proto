@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package student;
+
+service StudentAdministration {
+  rpc AddStudent(addStudent) returns (Ack);
+  rpc GetStudent(getStudent) returns (Student);
+  rpc DeleteStudent(getStudent) returns (Ack);
+}
+
+message Ack {}
+
+message Interview { string id = 1; }
+
+message Student {
+  string name = 1;
+  string email = 2;
+  string studentID = 3;
+  string phone = 4;
+  optional Interview interview = 5;
+  optional string info_provided_by_user = 6;
+}
+
+message addStudent { Student student = 1; }
+
+message serveStudent { Student student = 1; }
+
+message getStudent { string studentId = 1; }
+
+message serveStudents { repeated Student students = 1; }

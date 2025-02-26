@@ -1,0 +1,35 @@
+syntax = "proto3";
+package auth;
+
+service Authentication {
+  rpc AdminLogin(AdminLoginRequest) returns (LoginResponse);
+  rpc UserLogin(UserLoginRequest) returns (LoginResponse);
+  rpc ValidateTokenUser(ValidateTokenRequest) returns (Ack);
+  rpc ValidateTokenAdmin(ValidateTokenRequest) returns (Ack);
+  rpc RefreshTokenAdmin(RefreshRequest) returns (RefreshResponse);
+  rpc RefreshTokenUser(RefreshRequest) returns (RefreshResponse);
+}
+
+message ValidateTokenRequest { string auth_token = 1; }
+
+message Ack {}
+
+message AdminLoginRequest {
+  string email = 1;
+  string password = 2;
+  string institution = 3;
+}
+
+message LoginResponse {
+  string auth_token = 1;
+  string refresh_token = 2;
+}
+
+message RefreshRequest { string refresh_token = 1; }
+
+message RefreshResponse { string auth_token = 1; }
+
+message UserLoginRequest {
+  string email = 1;
+  string password = 2;
+}

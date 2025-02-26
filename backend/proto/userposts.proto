@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package userposts;
+
+service UserpostsAdministration {
+  rpc GetPosts(getPosts) returns (servePosts);
+  rpc GetPost(getPost) returns (servePost);
+
+}
+
+message Ack {}
+message postId { string id = 1; }
+message Author {
+  string id = 1;
+}
+message ImageId {
+  string id = 1;
+}
+message Lang {
+  string id = 1;
+}
+message Post {
+  string post_id = 1;
+  Lang lang = 2;
+  string title = 3;
+  string description = 4;
+  string markdown = 5;
+  Author author = 6;
+  string date = 7;
+  ImageId imageId = 8;
+}
+
+message PostHeader {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  Lang lang = 4;
+  Author author = 5;
+  string date = 6;
+}
+
+message servePosts { repeated PostHeader posts = 1; }
+
+message servePost { Post post = 1; }
+
+message getPosts { string lang = 1; }
+
+message getPost { string id = 1; }

@@ -1,0 +1,3 @@
+[submodule "wasm-test/protos"]
+	path = wasm-test/protos
+	url = https://github.com/ZetaKoders/protos.git

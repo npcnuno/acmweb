@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "projects": "Projekte",
+    "events": "Veranstaltungen",
+    "about": "Über",
+    "signup": "Registrieren",
+    "join": "Beitreten",
+    "close": "Schließen"
+  },
+  "join": {
+    "title": "Tritt unserer Gemeinschaft bei",
+    "description": "Seien Sie Teil unserer erstaunlichen Gemeinschaft und arbeiten Sie an Projekten zusammen.",
+    "button": "Loslegen"
+  },
+  "blog": {
+    "title": "Neueste Blog-Beiträge"
+  },
+  "languages": {
+    "title": "Programmiersprachen"
+  },
+  "projects": {
+    "title": "Unsere Projekte"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "主页",
+    "projects": "项目",
+    "events": "活动",
+    "about": "关于",
+    "signup": "注册",
+    "join": "加入",
+    "close": "关闭"
+  },
+  "join": {
+    "title": "加入我们的社区",
+    "description": "成为我们出色社区的一员，共同协作开展项目。",
+    "button": "开始"
+  },
+  "blog": {
+    "title": "最新博客文章"
+  },
+  "languages": {
+    "title": "编程语言"
+  },
+  "projects": {
+    "title": "我们的项目"
+  }
+}

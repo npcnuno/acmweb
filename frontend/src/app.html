@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover" data-theme="ACM">
+    <div style="display: contents" class="h-full overflow-hidden">
+      %sveltekit.body%
+    </div>
+    <script>
+      /**
+       * First off we spawn a Web Worker. That's where our lib will be used. Note that
+       * we set the `type` to `module` to enable support for ES modules.
+       */
+      const worker = new Worker("/worker.js", { type: "module" });
+
+      /**
+       * Here we listen for messages from the worker.
+       */
+      worker.onmessage = ({ data }) => {
+        const { type } = data;
+
+        switch (type) {
+          case "FETCH_WASM": {
+            /**
+             * The worker wants to fetch the bytes for the module and for that we can use the `fetch` API.
+             * Then we convert the response into an `ArrayBuffer` and transfer the bytes back to the worker.
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+             * @see https://developer.mozilla.org/en-US/docs/Glossary/Transferable_objects
+             */
+            fetch("/pkg/synchronous_instantiation_bg.wasm")
+              .then((response) => response.arrayBuffer())
+              .then((bytes) => {
+                worker.postMessage(bytes, [bytes]);
+              });
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

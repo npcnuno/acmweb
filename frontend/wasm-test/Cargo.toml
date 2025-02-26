@@ -1,0 +1,36 @@
+[package]
+name = "wasm-test"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = { version = "*", features = ["serde-serialize"] }
+wasm-bindgen-futures = "*"
+tonic-web-wasm-client = "*"
+prost = "*"
+tonic = { version = "*", default-features = false, features = [
+  "prost",
+  "codegen",
+] }
+serde = "*"
+serde_derive = "*"
+serde_json = "*"
+web-sys = { version = "*", features = ["console"] }
+serde-wasm-bindgen = "*"
+chrono = { version = "*" }
+
+[build-dependencies]
+
+tonic-build = { version = "*", default-features = false, features = ["prost"] }
+
+[dev-dependencies]
+tonic-web-wasm-client = '*'
+wasm-bindgen-test = "*"
+
+[build]
+target = "wasm32-unknown-unknown"

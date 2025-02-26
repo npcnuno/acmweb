@@ -1,0 +1,25 @@
+syntax = "proto3";
+package admin;
+
+service AdminAdministration {
+  rpc CreateAdmin(CreateAdminRequest) returns (Ack);
+  rpc UpdateAdmin(UpdateAdminRequest) returns (Ack);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (Ack);
+}
+
+
+message Ack {}
+
+message DeleteAdminRequest { AdminId id = 1; }
+
+message AdminId { string id = 1; }
+
+message UpdateAdminRequest {
+  AdminId id = 1;
+  optional string email = 2;
+  optional string password = 3;
+}
+message CreateAdminRequest {
+  string email = 1;
+  string institution = 2;
+}

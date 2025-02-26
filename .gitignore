@@ -126,7 +126,7 @@ dist
 .vscode-test
 
 
-
+backend/target/*
 
 # yarn v2
 .yarn/cache

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package projects;
+
+service ProjectsAdministration {
+  rpc GetProjects(gProjects) returns (ServeProjects);
+  rpc GetProject(gProject) returns (ServeProject);
+}
+
+message gProjects {
+  string lang = 1;
+}
+
+message gProject {
+  string id = 1;
+}
+
+message ServeProjects {
+  repeated ProjectHeader projects = 1;
+}
+
+message ServeProject {
+  Project project = 1;
+}
+
+message ProjectHeader {
+  string id = 1;
+  string name = 2;
+  Lang lang = 3;
+  Progress status = 4;
+}
+
+message Project {
+  string id = 1;
+  string name = 2;
+  Lang lang = 3;
+  Progress status = 4;
+  repeated Author authors = 5;
+  ImageId image_id = 6;
+  repeated ProgLang prog_lang = 7;
+}
+
+message Author {
+  string id = 1;
+}
+
+message ProgLang {
+  string id = 1;
+}
+
+message Progress {
+  string id = 1;
+}
+
+message Lang {
+  string id = 1;
+}
+
+message ImageId {
+  string id = 1;
+}

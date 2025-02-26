@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "Início",
+    "projects": "Projetos",
+    "events": "Eventos",
+    "about": "Sobre",
+    "signup": "Inscrever-se",
+    "join": "Junte-se",
+    "close": "Fechar"
+  },
+  "join": {
+    "title": "Junte-se à nossa comunidade",
+    "description": "Faça parte de nossa incrível comunidade e colabore em projetos.",
+    "button": "Começar"
+  },
+  "blog": {
+    "title": "Últimas postagens no blog"
+  },
+  "languages": {
+    "title": "Linguagens de programação"
+  },
+  "projects": {
+    "title": "Nossos projetos"
+  }
+}
