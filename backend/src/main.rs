@@ -28,29 +28,12 @@ use projects_module::projects_administration_server::ProjectsAdministrationServe
 use student::StudentManager;
 use student_module::student_administration_server::StudentAdministrationServer;
 use tonic_web::{CorsGrpcWeb, GrpcWebLayer};
+use tower_http::cors::{AllowHeaders, AllowOrigin, CorsLayer};
 use userposts_module::userposts_administration_server::UserpostsAdministrationServer;
-#[derive(Debug, Default)]
-pub struct MyGreeter {}
-#[tonic::async_trait]
-impl Greeter for MyGreeter {
-    async fn say_hello(
-        &self,
-        request: Request<HelloRequest>,
-    ) -> Result<Response<HelloReply>, Status> {
-        println!("Got a request: {:?}", request);
-
-        let reply = HelloReply {
-            message: format!("Hello {}!", request.into_inner().name),
-        };
-
-        Ok(Response::new(reply))
-    }
-}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "0.0.0.0:50051".parse()?;
-    let greeter = MyGreeter::default();
     tokio::time::sleep(Duration::from_secs(15)).await;
     let db_url = match std::env::var("DB_URL") {
         Ok(a) => a,
@@ -66,14 +49,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dbconn::create_file_system().await;
     dbconn::define_db_functions().await;
 
-    let service_reflection = tonic_reflection::server::Builder::configure()
-        .register_encoded_file_descriptor_set(auth_module::FILE_DESCRIPTOR_SET)
-        .build_v1()
-        .unwrap();
+    // Define CORS settings
+    // Configure CORS
+    let cors = CorsLayer::new()
+        .allow_headers(AllowHeaders::any())
+        .allow_origin(AllowOrigin::any());
+
     Server::builder()
         .accept_http1(true)
+        .layer(
+            CorsLayer::new()
+                .allow_headers(AllowHeaders::any())
+                .allow_origin(AllowOrigin::any()),
+        )
         .layer(GrpcWebLayer::new())
-        .add_service(hello_world::greeter_server::GreeterServer::new(greeter))
         .add_service(AuthenticationServer::new(AuthManager::default()))
         .add_service(UserpostsAdministrationServer::new(
             UserpostsManager::default(),
@@ -82,8 +71,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .add_service(LanguagesAdministrationServer::new(
             LanguagesManager::default(),
         ))
-        .add_service(StrudentAdministrationServer::new(StudentManager::default()))
-        .add_service(service_reflection)
+        .add_service(StudentAdministrationServer::new(StudentManager::default()))
         .serve(addr)
         .await?;
 

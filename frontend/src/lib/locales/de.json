@@ -3,23 +3,34 @@
     "home": "Startseite",
     "projects": "Projekte",
     "events": "Veranstaltungen",
-    "about": "Über",
-    "signup": "Registrieren",
+    "about": "Über uns",
+    "signup": "Anmelden",
     "join": "Beitreten",
-    "close": "Schließen"
+    "close": "Schließen",
+    "language": "Sprache"
   },
   "join": {
-    "title": "Tritt unserer Gemeinschaft bei",
-    "description": "Seien Sie Teil unserer erstaunlichen Gemeinschaft und arbeiten Sie an Projekten zusammen.",
+    "title": "Treten Sie unserer Community bei",
+    "description": "Werden Sie Teil unserer großartigen Community und arbeiten Sie an Projekten zusammen.",
     "button": "Loslegen"
   },
   "blog": {
-    "title": "Neueste Blog-Beiträge"
+    "title": "Neueste Blogbeiträge"
   },
   "languages": {
     "title": "Programmiersprachen"
   },
   "projects": {
     "title": "Unsere Projekte"
+  },
+  "footer": {
+    "description": "Förderung der Informatik als Wissenschaft und Beruf",
+    "links": "Schnelllinks",
+    "about": "Über uns",
+    "events": "Veranstaltungen",
+    "projects": "Projekte",
+    "join": "Treten Sie uns bei",
+    "contact": "Kontaktieren Sie uns",
+    "rights": "Alle Rechte vorbehalten."
   }
 }

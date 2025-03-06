@@ -1,25 +1,25 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import PostsCard from "../../lib/components/card/PostsCard.svelte";
+  import { postsStore } from "../../stores/globalStores";
+  import { get_posts } from "wasm-test"; // adjust the import path as needed
+  import init from "wasm-test";
 
-  let posts = [
-    {
-      id: 1,
-      title: "NOVO PRESIDENTE DA ACM",
-      img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?...",
-      img_alt: "YES YES YES",
-      description: "Because it’s about motivating the doers...",
-      author: {
-        img: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?...",
-        name: "KATCHOW",
-      },
-      date: "January 30th",
-    },
-    // Add more posts...
-  ];
+  // Load posts when the component mounts.
+  onMount(async () => {
+    try {
+      await init(); // Wait for WASM initialization.
+      const response = await get_posts("en");
+      console.log(response);
+      postsStore.set(response);
+    } catch (error) {
+      console.error("getPosts failed", error);
+    }
+  });
 </script>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-  {#each posts as post}
+  {#each $postsStore as post (post.id)}
     <PostsCard data={post} />
   {/each}
 </div>

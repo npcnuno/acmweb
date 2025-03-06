@@ -9,8 +9,8 @@ tracing-subscriber = "*"
 tracing-appender = "*"
 tonic = "*"
 tokio-stream = "*"
-prost = "0.13"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+prost = "*"
+tokio = { version = "*", features = ["macros", "rt-multi-thread"] }
 tonic-web = "*"
 tonic-reflection = "*"
 tonic-health = "*"
@@ -20,11 +20,12 @@ once_cell = "*"
 surrealdb = { version = "*", features = [] }
 serde = "*"
 serde_json = "*"
-ureq = "3.0.5"
-reqwest = "0.12.12"
-jsonwebtoken = "9.3.1"
-chrono = "0.4.39"
-uuid = "1.13.2"
+ureq = "*"
+reqwest = "*"
+jsonwebtoken = "*"
+chrono = "*"
+uuid = "*"
+tower-http = { version = "*", features = ["cors"] }
 
 
 [build-dependencies]

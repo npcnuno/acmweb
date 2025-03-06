@@ -17,6 +17,7 @@
   import { t, locale } from "svelte-i18n";
   import { alertMessage } from "../stores/alertStore"; // import the alert store
   import { onMount } from "svelte";
+  import init from "wasm-test";
   import { getPosts } from "../lib/services/service";
   // Setup Floating UI for popups
   storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -26,7 +27,13 @@
     menuOpen = !menuOpen;
   }
   onMount(async () => {
-    await getPosts("en");
+    await init();
+    try {
+      await getPosts("en");
+    } catch (error) {
+      console.error("Could not load initial posts:", error);
+      // Continue initialization even if posts fail to load
+    }
   });
   // Language options with proper display format
   const languageOptions = [
@@ -37,6 +44,38 @@
     { code: "fr", flag: "🇫🇷", name: "Français" },
     { code: "ja", flag: "🇯🇵", name: "日本語" },
   ];
+
+  let showLanguageMenu = false;
+  let languageSwitcher;
+
+  // Reactively set the current language based on $locale
+  $: currentLanguage = languageOptions.find(
+    (option) => option.code === $locale,
+  ) || { flag: "🌐", name: "Select Language" };
+
+  // Toggle the language menu visibility
+  function toggleLanguageMenu() {
+    showLanguageMenu = !showLanguageMenu;
+  }
+
+  // Select a language and close the menu
+  function selectLanguage(code) {
+    $locale = code;
+    showLanguageMenu = false;
+  }
+
+  // Close the menu when clicking outside
+  onMount(() => {
+    function handleClickOutside(event) {
+      if (languageSwitcher && !languageSwitcher.contains(event.target)) {
+        showLanguageMenu = false;
+      }
+    }
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  });
 </script>
 
 <ModeWatcher />
@@ -67,13 +106,15 @@
       <img
         alt="ACM Chapter Logo"
         src="https://iscte.acm.org/wp-content/uploads/2015/04/cropped-LOGOv1-4.png"
-        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-1"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full p-1"
       />
       <div class="flex flex-col">
-        <span class="text-white text-lg sm:text-xl font-bold tracking-tight"
+        <span
+          class="text-grey-800 dark:text-white text-lg sm:text-xl font-bold tracking-tight"
           >ACM ISCTE</span
         >
-        <span class="text-white/70 text-xs hidden sm:block"
+        <span
+          class="text-grey-800/70 dark:text-white/70 text-xs hidden sm:block"
           >Student Chapter</span
         >
       </div>
@@ -93,28 +134,30 @@
       <DarkmodeSwitch />
 
       <!-- Language Switcher Dropdown -->
-      <div class="relative max-sm:hidden">
-        <select
-          bind:value={$locale}
-          class="appearance-none bg-blue-700 text-white pl-2 pr-8 py-2 rounded-lg hover:bg-blue-600 focus:ring-2 transition-colors"
+      <div bind:this={languageSwitcher} class="relative max-sm:hidden">
+        <button
+          on:click={toggleLanguageMenu}
+          aria-label={`Current language: ${currentLanguage.name}`}
+          class="relative flex items-center justify-center rounded-md text-sm hover:-translate-y-1 transform transition duration-200 hover:shadow-md"
         >
-          {#each languageOptions as option}
-            <option value={option.code}>{option.flag} {option.name}</option>
-          {/each}
-        </select>
-        <div
-          class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white"
-        >
-          <svg
-            class="fill-current h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
+          <span class="text-2xl">{currentLanguage.flag}</span>
+        </button>
+        {#if showLanguageMenu}
+          <ul
+            class="absolute top-full left-0 mt-1 py-1 bg-white border border-gray-300 rounded-md shadow-md"
           >
-            <path
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            />
-          </svg>
-        </div>
+            {#each languageOptions as option}
+              <li
+                on:click={() => selectLanguage(option.code)}
+                role="button"
+                aria-label={`Select ${option.name}`}
+                class="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+              >
+                <span class="text-2xl">{option.flag}</span>
+              </li>
+            {/each}
+          </ul>
+        {/if}
       </div>
 
       <!-- Join/Register Button -->

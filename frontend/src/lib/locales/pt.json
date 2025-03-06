@@ -6,20 +6,31 @@
     "about": "Sobre",
     "signup": "Inscrever-se",
     "join": "Junte-se",
-    "close": "Fechar"
+    "close": "Fechar",
+    "language": "Idioma"
   },
   "join": {
-    "title": "Junte-se à nossa comunidade",
-    "description": "Faça parte de nossa incrível comunidade e colabore em projetos.",
+    "title": "Junte-se à Nossa Comunidade",
+    "description": "Faça parte da nossa incrível comunidade e colabore em projetos.",
     "button": "Começar"
   },
   "blog": {
-    "title": "Últimas postagens no blog"
+    "title": "Últimas Postagens do Blog"
   },
   "languages": {
-    "title": "Linguagens de programação"
+    "title": "Linguagens de Programação"
   },
   "projects": {
-    "title": "Nossos projetos"
+    "title": "Nossos Projetos"
+  },
+  "footer": {
+    "description": "Avançando a Computação como Ciência e Profissão",
+    "links": "Links Rápidos",
+    "about": "Sobre Nós",
+    "events": "Eventos",
+    "projects": "Projetos",
+    "join": "Junte-se a Nós",
+    "contact": "Contato",
+    "rights": "Todos os direitos reservados."
   }
 }

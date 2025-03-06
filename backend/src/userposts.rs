@@ -81,69 +81,81 @@ pub struct UserpostsManager {}
 #[tonic::async_trait]
 impl UserpostsAdministration for UserpostsManager {
     async fn get_posts(&self, request: Request<GetPosts>) -> Result<Response<ServePosts>, Status> {
-        // Step 1: Fetch the list of supported languages.
-        //
+        println!("[DEBUG] get_posts request received: {:?}", request);
 
+        // Step 1: Fetch the list of supported languages.
         let mut q = DB.query("SELECT * FROM languages").await.map_err(|err| {
-            eprintln!("Error fetching languages: {:?}", err);
+            eprintln!("[ERROR] Error fetching languages: {:?}", err);
             return Status::internal("Database error");
         })?;
-        let Ok(l): Result<Vec<Option<LanguagesField>>, Error> = q.take(0) else {
-            return Err(Status::aborted("ERROR WHILE READING LANGUAGES"));
-        };
+
+        println!("[DEBUG] Languages query executed successfully.");
+
+        let result = q.take(0);
+        println!("[DEBUG] Languages query result: {:?}", result);
+
+        let l: Vec<Option<LanguagesField>> = result.ok().unwrap_or_default();
+        if l.is_empty() {
+            eprintln!("[ERROR] No languages found");
+            return Err(Status::aborted("No languages found"));
+        }
+
         // Step 2: Extract and trim the requested language from the gRPC request.
         let request_lang: String = request.into_inner().lang;
-        if request_lang.len() > 2 {
-            return Err(Status::aborted("Unvalid Language code provided"));
+        println!("[DEBUG] Requested language: {}", request_lang);
+
+        if request_lang.len() != 2 {
+            return Err(Status::invalid_argument("Invalid language code"));
         }
+
         // Step 3: Verify the requested language exists in the list.
-        if !l.iter().any(|l| {
+        let lang_exists = l.iter().any(|l| {
             l.as_ref()
                 .map(|language| language.code == request_lang)
                 .unwrap_or(false)
-        }) {
+        });
+        if !lang_exists {
             return Err(Status::invalid_argument(
                 "Requested language is not supported",
             ));
         }
 
         // Step 4: Query posts filtered by the valid language.
-        let mut p = DB
-            .query(format!(
-                "SELECT * FROM posts WHERE lang.code = '{}'",
-                request_lang
-            ))
-            .await
-            .map_err(|err| {
-                eprintln!("Error querying posts: {:?}", err);
-                return Status::internal("Database error fetching posts");
-            })?;
+        let query = format!["SELECT * FROM posts WHERE lang.code = '{}'", request_lang];
+        println!("[DEBUG] Posts query: {}", query);
 
-        let posts_result: Result<Vec<Option<Post>>, Error> = p.take(0);
-        if let Err(e) = &posts_result {
-            eprintln!("Error deserializing posts: {:?}", e);
-            return Err(Status::aborted("ERROR WHILE READING POSTS"));
-        }
-        let pts = posts_result.unwrap();
+        let mut p = DB.query(query).await.map_err(|err| {
+            eprintln!("[ERROR] Error querying posts: {:?}", err);
+            return Status::internal("Database error fetching posts");
+        })?;
+
+        println!("[DEBUG] Posts query executed successfully.");
+
+        let posts_result = p.take(0);
+        println!("[DEBUG] Posts query result: {:?}", posts_result);
+
+        let pts: Vec<Option<Post>> = posts_result.ok().unwrap_or_default();
         let mut posts: Vec<PH> = vec![];
-        for post in pts {
-            let post = post.unwrap();
 
-            posts.push(PH {
-                id: post.id.id.to_string(),
-                title: post.title,
-                description: post.description,
-                lang: Some(Lang {
-                    id: post.lang.id.to_string(),
-                }),
-                author: Some(Au {
-                    id: post.author.id.to_string(),
-                }),
-                date: post.date,
-            });
+        for post in pts {
+            if let Some(post) = post {
+                posts.push(PH {
+                    id: post.id.id.to_string(),
+                    title: post.title,
+                    description: post.description,
+                    lang: Some(Lang {
+                        id: post.lang.id.to_string(),
+                    }),
+                    author: Some(Au {
+                        id: post.author.id.to_string(),
+                    }),
+                    date: post.date,
+                });
+            }
         }
 
         // Return the posts in the gRPC response.
+        println!("[DEBUG] Sending response with {} posts", posts.len());
         Ok(Response::new(ServePosts { posts }))
     }
 

@@ -6,7 +6,8 @@
     "about": "About",
     "signup": "Sign Up",
     "join": "Join",
-    "close": "Close"
+    "close": "Close",
+    "language": "Language"
   },
   "join": {
     "title": "Join Our Community",
@@ -21,5 +22,15 @@
   },
   "projects": {
     "title": "Our Projects"
+  },
+  "footer": {
+    "description": "Advancing Computing as a Science & Profession",
+    "links": "Quick Links",
+    "about": "About Us",
+    "events": "Events",
+    "projects": "Projects",
+    "join": "Join Us",
+    "contact": "Contact Us",
+    "rights": "All rights reserved."
   }
 }

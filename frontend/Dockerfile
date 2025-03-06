@@ -1,7 +1,7 @@
 
 
 # Use the official Rust Alpine image which includes Cargo (Rust toolchain)
-FROM rust:1.70-alpine
+FROM rust:1.71.1-alpine
 
 # Install Node.js, npm, musl-dev (for linking), protobuf-dev (if needed), and curl
 RUN apk add --no-cache nodejs npm musl-dev protobuf-dev curl

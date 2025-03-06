@@ -405,6 +405,7 @@ dependencies = [
  "tonic-health",
  "tonic-reflection",
  "tonic-web",
+ "tower-http",
  "tracing",
  "tracing-appender",
  "tracing-subscriber",

@@ -1,16 +1,17 @@
 {
   "nav": {
-    "home": "主页",
+    "home": "首页",
     "projects": "项目",
     "events": "活动",
     "about": "关于",
     "signup": "注册",
     "join": "加入",
-    "close": "关闭"
+    "close": "关闭",
+    "language": "语言"
   },
   "join": {
     "title": "加入我们的社区",
-    "description": "成为我们出色社区的一员，共同协作开展项目。",
+    "description": "成为我们出色社区的一员，并参与项目合作。",
     "button": "开始"
   },
   "blog": {
@@ -21,5 +22,15 @@
   },
   "projects": {
     "title": "我们的项目"
+  },
+  "footer": {
+    "description": "推进计算作为科学与职业",
+    "links": "快速链接",
+    "about": "关于我们",
+    "events": "活动",
+    "projects": "项目",
+    "join": "加入我们",
+    "contact": "联系我们",
+    "rights": "保留所有权利。"
   }
 }

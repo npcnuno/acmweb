@@ -19,7 +19,7 @@ import {
 } from "wasm-test"; // adjust the import path as needed
 
 import { showAlert } from "../../stores/alertStore"; // adjust path as needed
-
+import { browser } from "$app/environment";
 import {
   authToken,
   refreshToken,
@@ -213,13 +213,15 @@ export async function deleteStudent(
  * On success, stores posts globally.
  */
 export async function getPosts(lang: string): Promise<any> {
-  try {
-    const response = await get_posts(lang);
-    const parsed = parseWasmResponse(response);
-    postsStore.set(parsed);
-    return parsed;
-  } catch (error) {
-    handleError(error, "getPosts failed");
+  if (browser) {
+    try {
+      const response = await get_posts(lang);
+      const parsed = parseWasmResponse(response);
+      postsStore.set(parsed);
+      return parsed;
+    } catch (error) {
+      handleError(error, "getPosts failed");
+    }
   }
 }
 

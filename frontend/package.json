@@ -40,6 +40,7 @@
     "fs": "^0.0.1-security",
     "lucide-svelte": "^0.476.0",
     "mode-watcher": "^0.5.1",
+    "prismjs": "^1.29.0",
     "simplex-noise": "^4.0.3",
     "superforms": "^0.0.1",
     "svelte-chartjs": "^3.1.5",

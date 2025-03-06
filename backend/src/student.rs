@@ -19,7 +19,7 @@ struct StudentRecord {
     name: String,
     email: String,
     phonenumber: String,
-    studentId: String,
+    student_id: String,
     // In DB the field is called HDYFU; we use it for "info_provided_by_user"
     HDYFU: Option<String>,
 }
@@ -53,7 +53,7 @@ impl student_module::student_administration_server::StudentAdministration for St
             .unwrap_or_else(|| "".to_string());
         let create_query = format!(
             "CREATE user CONTENT {{ name: '{}', email: '{}', phonenumber: '{}', studentId: '{}', HDYFU: '{}' }};",
-            student.name, student.email, student.phone, student.studentID, info
+            student.name, student.email, student.phone, student.student_id, info
         );
         let mut response = DB.query(create_query).await.map_err(|e| {
             eprintln!("Create failed: {:?}", e);
@@ -78,7 +78,7 @@ impl student_module::student_administration_server::StudentAdministration for St
     ) -> Result<Response<student_module::Student>, Status> {
         let req = request.into_inner();
         // Query the DB for a student with matching studentId
-        let query = format!("SELECT * FROM user WHERE studentId = '{}';", req.studentId);
+        let query = format!("SELECT * FROM user WHERE studentId = '{}';", req.student_id);
         let mut response = DB.query(query).await.map_err(|e| {
             eprintln!("Query failed: {:?}", e);
             Status::internal("Database error")
@@ -94,11 +94,11 @@ impl student_module::student_administration_server::StudentAdministration for St
         Ok(Response::new(student_module::Student {
             name: student.name,
             email: student.email,
-            studentID: student.studentId,
+            student_id: student.student_id,
             phone: student.phonenumber,
             // Interview is not stored in DB so we leave it unset.
             interview: None,
-            info_provided_by_user: student.HDYFU.unwrap_or_else(|| "".to_string()),
+            info_provided_by_user: Some(student.HDYFU.unwrap_or_else(|| "".to_string())),
         }))
     }
 
@@ -111,7 +111,7 @@ impl student_module::student_administration_server::StudentAdministration for St
         validate_admin_token(request.metadata())?;
         let req = request.into_inner();
         // Delete query using studentId
-        let delete_query = format!("DELETE user WHERE studentId = '{}';", req.studentId);
+        let delete_query = format!("DELETE user WHERE studentId = '{}';", req.student_id);
         let mut response = DB.query(delete_query).await.map_err(|e| {
             eprintln!("Delete failed: {:?}", e);
             Status::internal("Database error")
